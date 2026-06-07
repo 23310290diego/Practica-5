@@ -44,4 +44,39 @@ class KruskalConsola:
         costo_total = 0
         paso = 1
 
-        
+        # ciclo principal para evaluar cada arista una por una
+        for u, v, peso in aristas_ordenadas:
+            print(f"[Paso {paso}] Evaluando {u} - {v} con peso {peso}:")
+            
+            raiz_u = self.buscar_padre(padres, u)
+            raiz_v = self.buscar_padre(padres, v)
+
+            # si las raíces son diferentes, los nodos no están conectados y no hay ciclo
+            if raiz_u != raiz_v:
+                self.union(padres, raiz_u, raiz_v)
+                arbol_final.append((u, v, peso))
+                costo_total += peso
+                print("       Aceptada: No forma ciclo.")
+            else:
+                print("       Rechazada: Formaría un ciclo.")
+            
+            paso += 1
+
+            # detiene el algoritmo si ya se tienen las aristas necesarias (nodos - 1)
+            if len(arbol_final) == len(self.nodos) - 1:
+                break
+
+        # muestra los resultados finales en la consola
+        print(f"\nResultado final ({modo}):")
+        print("Aristas elegidas:")
+        for u, v, peso in arbol_final:
+            print(f"   * {u} -- {v} (peso: {peso})")
+        print(f"Costo total del árbol: {costo_total}\n")
+
+
+if __name__ == "__main__":
+    simulador = KruskalConsola()
+    
+    # ejecuta el simulador para ambos casos de estudio
+    simulador.ejecutar_kruskal(modo="minimo")
+    simulador.ejecutar_kruskal(modo="maximo")
